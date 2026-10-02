@@ -8,12 +8,12 @@ import (
 //go:linkname mallocgc runtime.mallocgc
 func mallocgc(size uintptr, typ uintptr, needzero bool) unsafe.Pointer
 
-//go:linkname rawbyteslice runtime.rawbyteslice
-func rawbyteslice(size int) (b []byte)
-
-// RawByteSlice point to runtime.rawbyteslice
+// RawByteSlice allocates a byte slice with the given size.
+// Originally it was linked to runtime.rawbyteslice via go:linkname,
+// but that internal symbol was removed in newer Go releases,
+// so it falls back to the standard make() allocation.
 func RawByteSlice(size int) (b []byte) {
-	return rawbyteslice(size)
+	return make([]byte, size)
 }
 
 // RawMalloc allocates a new slice. The slice is not zeroed.
